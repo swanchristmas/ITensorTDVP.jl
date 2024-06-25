@@ -147,7 +147,7 @@ function sub_sweep_update(
       print(" mindim=", mindim)
       print(" current_time=", round(current_time; digits=3))
       println()
-      if spec != nothing
+      if !isnothing(spec)
         @printf(
           "  Trunc. err=%.2E, bond dimension %d\n", spec.truncerr, dim(linkind(state, b))
         )
@@ -289,9 +289,10 @@ function region_update!(
   position!(reduce_operator, state, b)
   reduced_state = state[b]
   internal_kwargs = (; current_time, time_step, outputlevel)
-  reduced_state, info = updater(
+  reduced_state, info1 = updater(
     reduce_operator, reduced_state; internal_kwargs, updater_kwargs...
   )
+  info2 = (; info=nothing)
   current_time += time_step
   normalize && (reduced_state /= norm(reduced_state))
   spec = nothing
@@ -312,7 +313,7 @@ function region_update!(
     set_nsite!(reduce_operator, nsite - 1)
     position!(reduce_operator, state, b1)
     internal_kwargs = (; current_time, time_step=-time_step, outputlevel)
-    bond_reduced_state, info = updater(
+    bond_reduced_state, info2 = updater(
       reduce_operator, bond_reduced_state; internal_kwargs, updater_kwargs...
     )
     current_time -= time_step
@@ -325,6 +326,7 @@ function region_update!(
     end
     set_nsite!(reduce_operator, nsite)
   end
+  info = (; info1, info2)
   return current_time, maxtruncerr, spec, info
 end
 
@@ -414,9 +416,10 @@ function region_update!(
   position!(reduce_operator, state, b)
   reduced_state = state[b] * state[b + 1]
   internal_kwargs = (; current_time, time_step, outputlevel)
-  reduced_state, info = updater(
+  reduced_state, info1 = updater(
     reduce_operator, reduced_state; internal_kwargs, updater_kwargs...
   )
+  info2 = (; info=nothing)
   current_time += time_step
   normalize && (reduced_state /= norm(reduced_state))
   spec = nothing
@@ -447,7 +450,7 @@ function region_update!(
     set_nsite!(reduce_operator, nsite - 1)
     position!(reduce_operator, state, b1)
     internal_kwargs = (; current_time, time_step=-time_step, outputlevel)
-    bond_reduced_state, info = updater(
+    bond_reduced_state, info2 = updater(
       reduce_operator, bond_reduced_state; internal_kwargs, updater_kwargs...
     )
     current_time -= time_step
@@ -455,6 +458,7 @@ function region_update!(
     state[b1] = bond_reduced_state
     set_nsite!(reduce_operator, nsite)
   end
+  info = (; info1, info2)
   return current_time, maxtruncerr, spec, info
 end
 
