@@ -14,3 +14,4 @@ docs/build/
 abstractbackend.jl
 backend_types.jl
 BackendSelection.jl
+examples/test.jl

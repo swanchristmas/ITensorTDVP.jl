@@ -103,7 +103,7 @@ function alternating_update(
       println()
       flush(stdout)
     end
-    isdone = checkdone(; state, sweep, outputlevel, sweep_observer!)
+    isdone = checkdone(; state, sweep, outputlevel, sweep_observer!)    # JSY, 20240703
     isdone && break
   end
   return state
