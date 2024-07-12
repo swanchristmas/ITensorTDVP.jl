@@ -250,7 +250,7 @@ function region_update!(
   if !isnothing(time_step)
     current_time += time_step
   end
-  normalize && (reduced_state /= norm(reduced_state))
+  normalize && (reduced_state ./= norm(reduced_state))
   spec = nothing
   state[b] = reduced_state
   if !is_half_sweep_done(direction, b, N; ncenter=nsite)
@@ -293,7 +293,7 @@ function region_update!(
     reduce_operator, reduced_state; internal_kwargs, updater_kwargs...
   )
   current_time += time_step
-  normalize && (reduced_state /= norm(reduced_state))
+  normalize && (reduced_state ./= norm(reduced_state))
   spec = nothing
   state[b] = reduced_state
   if !is_half_sweep_done(direction, b, N; ncenter=nsite)
@@ -362,7 +362,7 @@ function region_update!(
   if !isnothing(time_step)
     current_time += time_step
   end
-  normalize && (reduced_state /= norm(reduced_state))
+  normalize && (reduced_state ./= norm(reduced_state))
   spec = nothing
   ortho = isforward(direction) ? "left" : "right"
   drho = nothing
@@ -418,7 +418,7 @@ function region_update!(
     reduce_operator, reduced_state; internal_kwargs, updater_kwargs...
   )
   current_time += time_step
-  normalize && (reduced_state /= norm(reduced_state))
+  normalize && (reduced_state ./= norm(reduced_state))
   spec = nothing
   ortho = isforward(direction) ? "left" : "right"
   drho = nothing
@@ -451,7 +451,7 @@ function region_update!(
       reduce_operator, bond_reduced_state; internal_kwargs, updater_kwargs...
     )
     current_time -= time_step
-    normalize && (bond_reduced_state /= norm(bond_reduced_state))
+    normalize && (bond_reduced_state ./= norm(bond_reduced_state))
     state[b1] = bond_reduced_state
     set_nsite!(reduce_operator, nsite)
   end
